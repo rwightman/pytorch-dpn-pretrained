@@ -10,7 +10,10 @@ All testing of these models and all validation was done with torch (0.2.0.post1)
 
 ## Usage
 
-The pretrained weights can be used in two ways. They can be converted to PyTorch pth files by using the convert_from_mxnet.py script from the command line. They can also be used via the model creation functions with pretrained=True set if executing in a location with MXNet available and weights in the './pretrained' folder
+The pretrained weights can be used in two ways. 
+
+1. They can be converted to PyTorch pth files by using the convert_from_mxnet.py script from the command line and then used as a normal PyTorch checkpoint.
+2. They can be used via the model creation functions with pretrained=True if executing in an environment with MXNet available and weights in the './pretrained' folder.
 
 ### Conversion Script
 
