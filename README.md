@@ -40,7 +40,7 @@ Note that results are sensitive to image crop, scaling interpolation, and even t
 
 ### Results @224x224
 
-|Model   | Prec@1 (Err)   | Prec@5 (Err)   | Params (M)   | Crop  |
+|Model   | Prec@1 (Err)   | Prec@5 (Err)   | #Params   | Crop  |
 |---|---|---|---|---|
 | DenseNet121 | 74.752 (25.248)  | 92.152 (7.848)  | 7.98  | 87.5%  |
 | ResNet50 | 76.130 (23.870) | 92.862 (7.138) |	25.56 | 87.5% |
@@ -57,7 +57,7 @@ Note that results are sensitive to image crop, scaling interpolation, and even t
 
 ### Results @299x299
 
-|Model   | Prec@1 (Err)   | Prec@5 (Err)   | Params (M)   | Crop  |
+|Model   | Prec@1 (Err)   | Prec@5 (Err)   | #Params   | Crop  |
 |---|---|---|---|---|
 | InceptionV3 | 77.436 (22.564) | 93.476 (6.524) | 27.16 | 87.5% |
 | DualPathNet68 | 78.006 (21.994) | 94.158 (5.842) | 12.61 | 100% |
@@ -70,7 +70,7 @@ Note that results are sensitive to image crop, scaling interpolation, and even t
 
 ### Results @320x320
 
-|Model   | Prec@1 (Err)   | Prec@5 (Err)   | Params (M)   | Crop  |
+|Model   | Prec@1 (Err)   | Prec@5 (Err)   | #Params   | Crop  |
 |---|---|---|---|---|
 | DualPathNet68 | 78.450 (21.550) | 94.358 (5.642) | 12.61 | 100% |
 | DualPathNet92 | 80.960 (19.040) | 95.500 (4.500) | 37.67 | 100% |
