@@ -1,7 +1,4 @@
-"""Sample Pytorch defense.
-
-This defense loads inception v3 checkpoint and classifies all images
-using loaded checkpoint.
+"""Sample PyTorch Inference script
 """
 
 from __future__ import absolute_import
@@ -20,7 +17,7 @@ import model_factory
 from dataset import Dataset
 
 
-parser = argparse.ArgumentParser(description='PyTorch ImageNet Validation')
+parser = argparse.ArgumentParser(description='PyTorch ImageNet Inference')
 parser.add_argument('data', metavar='DIR',
                     help='path to dataset')
 parser.add_argument('--output_dir', metavar='DIR', default='./',
