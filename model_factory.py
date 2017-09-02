@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import math
-from dpn import dpn68, dpn92, dpn98, dpn131, dpn107
+from dpn import dpn68, dpn68b, dpn92, dpn98, dpn131, dpn107
 from torchvision.models.resnet import resnet18, resnet34, resnet50, resnet101, resnet152
 from torchvision.models.densenet import densenet121, densenet169, densenet161, densenet201
 from torchvision.models.inception import inception_v3
@@ -16,21 +16,28 @@ def create_model(model_name, num_classes=1000, pretrained=False, **kwargs):
         test_time_pool = kwargs.pop('test_time_pool')
     else:
         test_time_pool = True
+    if 'extra' in kwargs:
+        extra = kwargs.pop('extra')
+    else:
+        extra = True
     if model_name == 'dpn68':
         model = dpn68(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, **kwargs)
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+    elif model_name == 'dpn68b':
+        model = dpn68b(
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
     elif model_name == 'dpn92':
         model = dpn92(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, **kwargs)
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, extra=extra)
     elif model_name == 'dpn98':
         model = dpn98(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, **kwargs)
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
     elif model_name == 'dpn131':
         model = dpn131(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, **kwargs)
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
     elif model_name == 'dpn107':
         model = dpn107(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, **kwargs)
+            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
     elif model_name == 'resnet18':
         model = resnet18(num_classes=num_classes, pretrained=pretrained, **kwargs)
     elif model_name == 'resnet34':

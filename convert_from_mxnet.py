@@ -57,6 +57,10 @@ def convert_from_mxnet(model, checkpoint_prefix, debug=False):
                 mxnet_key += key_add
             else:
                 # middle blocks
+                if model.b and 'c1x1_c' in k[2]:
+                    bc_block = True  # b-variant split c-block special treatment
+                else:
+                    bc_block = False
                 ck = k[1].split('_')
                 mxnet_key += ck[0] + '_x__' + ck[1] + '_'
                 ck = k[2].split('_')
@@ -65,12 +69,13 @@ def convert_from_mxnet(model, checkpoint_prefix, debug=False):
                     mxnet_key += '(s/2)' if ck[2] == 's2' else '(s/1)'
                 mxnet_key += '__'
                 if k[3] == 'bn':
-                    mxnet_key += 'bn__bn_'
+                    mxnet_key += 'bn_' if bc_block else 'bn__bn_'
                     aux, key_add = _convert_bn(k[4])
                     mxnet_key += key_add
                 else:
-                    assert k[4] == 'weight'
-                    mxnet_key += 'conv_' + k[4]
+                    ki = 3 if bc_block else 4
+                    assert k[ki] == 'weight'
+                    mxnet_key += 'conv_' + k[ki]
         elif k[0] == 'classifier':
             if 'fc6-1k_weight' in mxnet_weights:
                 mxnet_key += 'fc6-1k_'
@@ -114,7 +119,7 @@ def main():
     model = model_factory.create_model(args.model, num_classes=1000, pretrained=False)
 
     model_prefix = args.model
-    if model_prefix == 'dpn107':
+    if model_prefix in ['dpn107', 'dpn68b', 'dpn92']:
         model_prefix += '-extra'
     checkpoint_base = os.path.join(args.checkpoint_path, model_prefix)
     convert_from_mxnet(model, checkpoint_base)
