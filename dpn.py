@@ -25,13 +25,13 @@ __all__ = ['DPN', 'dpn68', 'dpn68b', 'dpn92', 'dpn98', 'dpn131', 'dpn107']
 
 # If anyone able to provide direct link hosting, more than happy to fill these out.. -rwightman
 model_urls = {
-    'dpn68': '',
-    'dpn68b-extra': '',
+    'dpn68': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn68.pth',
+    'dpn68b-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn68b-extra.pth',
     'dpn92': '',
-    'dpn92-extra': '',
-    'dpn98': '',
-    'dpn131': '',
-    'dpn107-extra': ''
+    'dpn92-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn92-extra.pth',
+    'dpn98': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn98.pth',
+    'dpn131': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn131.pth',
+    'dpn107-extra': 'https://s3.amazonaws.com/dpn-pytorch-weights/dpn107-extra.pth'
 }
 
 
