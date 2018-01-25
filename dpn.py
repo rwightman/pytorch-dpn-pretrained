@@ -23,23 +23,22 @@ from convert_from_mxnet import convert_from_mxnet, has_mxnet
 __all__ = ['DPN', 'dpn68', 'dpn68b', 'dpn92', 'dpn98', 'dpn131', 'dpn107']
 
 
-# If anyone able to provide direct link hosting, more than happy to fill these out.. -rwightman
 model_urls = {
     'dpn68':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/dpn68-66bebafa7.pth',
+        'http://data.lip6.fr/cadene/pretrainedmodels/dpn68-66bebafa7.pth',
     'dpn68b-extra':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/'
+        'http://data.lip6.fr/cadene/pretrainedmodels/'
         'dpn68b_extra-84854c156.pth',
     'dpn92': '',
     'dpn92-extra':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/'
+        'http://data.lip6.fr/cadene/pretrainedmodels/'
         'dpn92_extra-b040e4a9b.pth',
     'dpn98':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/dpn98-5b90dec4d.pth',
+        'http://data.lip6.fr/cadene/pretrainedmodels/dpn98-5b90dec4d.pth',
     'dpn131':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/dpn131-71dfe43e0.pth',
+        'http://data.lip6.fr/cadene/pretrainedmodels/dpn131-71dfe43e0.pth',
     'dpn107-extra':
-        'https://s3.amazonaws.com/dpn-pytorch-weights/'
+        'http://data.lip6.fr/cadene/pretrainedmodels/'
         'dpn107_extra-1ac7121e2.pth'
 }
 
