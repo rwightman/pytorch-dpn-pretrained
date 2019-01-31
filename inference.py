@@ -89,21 +89,21 @@ def main():
     batch_time = AverageMeter()
     end = time.time()
     top5_ids = []
-    for batch_idx, (input, _) in enumerate(loader):
-        input = input.cuda()
-        input_var = autograd.Variable(input, volatile=True)
-        labels = model(input_var)
-        top5 = labels.topk(5)[1]
-        top5_ids.append(top5.data.cpu().numpy())
+    with torch.no_grad():
+        for batch_idx, (input, _) in enumerate(loader):
+            input = input.cuda()
+            labels = model(input)
+            top5 = labels.topk(5)[1]
+            top5_ids.append(top5.cpu().numpy())
 
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
 
-        if batch_idx % args.print_freq == 0:
-            print('Predict: [{0}/{1}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})'.format(
-                batch_idx, len(loader), batch_time=batch_time))
+            if batch_idx % args.print_freq == 0:
+                print('Predict: [{0}/{1}]\t'
+                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})'.format(
+                    batch_idx, len(loader), batch_time=batch_time))
 
     top5_ids = np.concatenate(top5_ids, axis=0).squeeze()
 

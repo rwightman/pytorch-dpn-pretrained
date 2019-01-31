@@ -102,7 +102,7 @@ def get_transforms_eval(model_name, img_size=224, crop_pct=None):
             std=[0.229, 0.224, 0.225])
 
     return transforms.Compose([
-        transforms.Scale(scale_size, Image.BICUBIC),
+        transforms.Resize(scale_size, Image.BICUBIC),
         transforms.CenterCrop(img_size),
         transforms.ToTensor(),
         normalize])
