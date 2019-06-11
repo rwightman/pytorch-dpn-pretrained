@@ -16,49 +16,45 @@ def create_model(model_name, num_classes=1000, pretrained=False, **kwargs):
         test_time_pool = kwargs.pop('test_time_pool')
     else:
         test_time_pool = True
-    if 'extra' in kwargs:
-        extra = kwargs.pop('extra')
-    else:
-        extra = True
     if model_name == 'dpn68':
         model = dpn68(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'dpn68b':
         model = dpn68b(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'dpn92':
         model = dpn92(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool, extra=extra)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'dpn98':
         model = dpn98(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'dpn131':
         model = dpn131(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'dpn107':
         model = dpn107(
-            num_classes=num_classes, pretrained=pretrained, test_time_pool=test_time_pool)
+            pretrained=pretrained, test_time_pool=test_time_pool, num_classes=num_classes)
     elif model_name == 'resnet18':
-        model = resnet18(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = resnet18(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'resnet34':
-        model = resnet34(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = resnet34(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'resnet50':
-        model = resnet50(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = resnet50(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'resnet101':
-        model = resnet101(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = resnet101(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'resnet152':
-        model = resnet152(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = resnet152(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'densenet121':
-        model = densenet121(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = densenet121(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'densenet161':
-        model = densenet161(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = densenet161(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'densenet169':
-        model = densenet169(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = densenet169(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'densenet201':
-        model = densenet201(num_classes=num_classes, pretrained=pretrained, **kwargs)
+        model = densenet201(pretrained=pretrained, num_classes=num_classes, **kwargs)
     elif model_name == 'inception_v3':
         model = inception_v3(
-            num_classes=num_classes, pretrained=pretrained, transform_input=False, **kwargs)
+            pretrained=pretrained, num_classes=num_classes, transform_input=False, **kwargs)
     else:
         assert False, "Unknown model architecture (%s)" % model_name
     return model

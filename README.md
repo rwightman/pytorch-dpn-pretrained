@@ -4,31 +4,31 @@ This repository includes a PyTorch implementation of DualPathNetworks (https://a
 
 The code is based upon cypw's original MXNet implementation (https://github.com/cypw/DPNs) with oyam's PyTorch implementation (https://github.com/oyam/pytorch-DPNs) as a reference.
 
-If anyone would like to host a direct link of PyTorch pth files I am happy to do the conversion and upload somewhere. I do not have the resources to host myself.
+Original testing of these models and all validation was done with torch (0.2.0.post1) and mxnet (0.11.0) pip packages installed. The models have since been updated and tested with Conda installs of PyTorch 1.0 and 1.1.
 
-All testing of these models and all validation was done with torch (0.2.0.post1) and mxnet (0.11.0) pip packages installed. 
+## Pretrained
 
-## Usage
+The model weights have already been converted to PyTorch and hosted at a fixed URL. You can use those pretrained weights by calling the model entrypoint functions with `pretrained=True`
 
-Download and untar trained weights files from https://github.com/cypw/DPNs#trained-models into a './pretrained' folder where this code is located. The pretrained weights can then be used in two ways:
+## PyTorch Hub
 
-1. They can be converted to PyTorch pth files by using the convert_from_mxnet.py script from the command line and then used as a normal PyTorch checkpoint.
-2. They can be used via the model creation functions with pretrained=True if executing in an environment with MXNet available and weights in the './pretrained' folder.
+Models can also be access via the PyTorch Hub API
 
-### Conversion Script
+```
+>>> torch.hub.list('rwightman/pytorch-dpn-pretrained')
+['dpn68', ...]
+>>> model = torch.hub.load('rwightman/pytorch-dpn-pretrained', 'dpn68', pretrained=True)
+>>> model.eval()
+>>> output = model(torch.randn(1,3,224,224))
+```
+
+## Conversion
+
+If you want to convert the weights yourself, download and untar trained weights files from https://github.com/cypw/DPNs#trained-models into a './pretrained' folder where this code is located.
+
+The weights can be converted by running the conversion script as so:
 
     python convert_from_mxnet.py ./pretrained/ --model dpn107
-    
-### Pretrained 
-
-    python validate.py /imagenet/validation/ --pretrained --model dpn92 --multi-gpu --img-size 320
-
-Ensure you are executing the above with the appropriate MXNet model weights untarred into the './pretrained' folder.
-
-## TODO
-
-* Add conversion support for 5k models and test (need 5K Imagenet)
-* Add/test training code from PyTorch imagenet ref impl if any interest
 
 ## Results
 
@@ -59,7 +59,7 @@ Models with a '*' are using weights that were trained on ImageNet-5k and fine-tu
 | DualPathNet92* | 80.034 (19.966) | 94.868 (5.132) | 37.67 | 87.5% |
 | DualPathNet107 | 80.172 (19.828) | 94.938 (5.062) | 86.92 | 87.5% |
 
-### Results @299x299
+### Results @299x299 (test_time_pool=True for DPN)
 
 |Model   | Prec@1 (Err)   | Prec@5 (Err)   | #Params   | Crop  |
 |---|---|---|---|---|
@@ -74,7 +74,7 @@ Models with a '*' are using weights that were trained on ImageNet-5k and fine-tu
 | DualPathNet131 | 81.208 (18.792) | 95.630 (4.370) | 79.25 | 100% |
 | DualPathNet107* | 81.432 (18.568) | 95.706 (4.294) | 86.92 | 100% |
 
-### Results @320x320
+### Results @320x320 (test_time_pool=True)
 
 |Model   | Prec@1 (Err)   | Prec@5 (Err)   | #Params   | Crop  |
 |---|---|---|---|---|

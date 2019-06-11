@@ -9,15 +9,17 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.utils.model_zoo as model_zoo
+try:
+    from torch.hub import load_state_dict_from_url
+except ImportError:
+    from torch.utils.model_zoo import load_url as load_state_dict_from_url
+
 from collections import OrderedDict
 
 from adaptive_avgmax_pool import adaptive_avgmax_pool2d
-from convert_from_mxnet import convert_from_mxnet, has_mxnet
 
 
 __all__ = ['DPN', 'dpn68', 'dpn68b', 'dpn92', 'dpn98', 'dpn131', 'dpn107']
@@ -25,116 +27,137 @@ __all__ = ['DPN', 'dpn68', 'dpn68b', 'dpn92', 'dpn98', 'dpn131', 'dpn107']
 
 model_urls = {
     'dpn68':
-        'http://data.lip6.fr/cadene/pretrainedmodels/dpn68-66bebafa7.pth',
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn68-66bebafa7.pth',
     'dpn68b-extra':
-        'http://data.lip6.fr/cadene/pretrainedmodels/'
-        'dpn68b_extra-84854c156.pth',
-    'dpn92': '',
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn68b_extra-84854c156.pth',
     'dpn92-extra':
-        'http://data.lip6.fr/cadene/pretrainedmodels/'
-        'dpn92_extra-b040e4a9b.pth',
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn92_extra-b040e4a9b.pth',
     'dpn98':
-        'http://data.lip6.fr/cadene/pretrainedmodels/dpn98-5b90dec4d.pth',
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn98-5b90dec4d.pth',
     'dpn131':
-        'http://data.lip6.fr/cadene/pretrainedmodels/dpn131-71dfe43e0.pth',
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn131-71dfe43e0.pth',
     'dpn107-extra':
-        'http://data.lip6.fr/cadene/pretrainedmodels/'
-        'dpn107_extra-1ac7121e2.pth'
+        'https://github.com/rwightman/pytorch-dpn-pretrained/releases/download/v0.1/dpn107_extra-1ac7121e2.pth'
 }
 
 
-def dpn68(num_classes=1000, pretrained=False, test_time_pool=True):
+def dpn68(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-68 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         small=True, num_init_features=10, k_r=128, groups=32,
         k_sec=(3, 4, 12, 3), inc_sec=(16, 32, 32, 64),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        if model_urls['dpn68']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn68']))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68')
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn68']))
     return model
 
 
-def dpn68b(num_classes=1000, pretrained=False, test_time_pool=True):
+def dpn68b(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-68b model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         small=True, num_init_features=10, k_r=128, groups=32,
         b=True, k_sec=(3, 4, 12, 3), inc_sec=(16, 32, 32, 64),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        if model_urls['dpn68b-extra']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn68b-extra']))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn68-extra')
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn68b-extra']))
     return model
 
 
-def dpn92(num_classes=1000, pretrained=False, test_time_pool=True, extra=True):
+def dpn92(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-92 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         num_init_features=64, k_r=96, groups=32,
         k_sec=(3, 4, 20, 3), inc_sec=(16, 32, 24, 128),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        # there are both imagenet 5k trained, 1k finetuned 'extra' weights
-        # and normal imagenet 1k trained weights for dpn92
-        key = 'dpn92'
-        if extra:
-            key += '-extra'
-        if model_urls[key]:
-            model.load_state_dict(model_zoo.load_url(model_urls[key]))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/' + key)
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn92-extra']))
     return model
 
 
-def dpn98(num_classes=1000, pretrained=False, test_time_pool=True):
+def dpn98(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-98 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         num_init_features=96, k_r=160, groups=40,
         k_sec=(3, 6, 20, 3), inc_sec=(16, 32, 32, 128),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        if model_urls['dpn98']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn98']))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn98')
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn98']))
     return model
 
 
-def dpn131(num_classes=1000, pretrained=False, test_time_pool=True):
+def dpn131(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-131 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         num_init_features=128, k_r=160, groups=40,
         k_sec=(4, 8, 28, 3), inc_sec=(16, 32, 32, 128),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        if model_urls['dpn131']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn131']))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn131')
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn131']))
     return model
 
 
-def dpn107(num_classes=1000, pretrained=False, test_time_pool=True):
+def dpn107(pretrained=False, test_time_pool=False, **kwargs):
+    """Constructs a DPN-107 model.
+
+    Args:
+        pretrained (bool): If True, returns a model pre-trained on ImageNet-1K
+        test_time_pool (bool): If True, pools features for input resolution beyond
+            standard 224x224 input with avg+max at inference/validation time
+
+        **kwargs : Keyword args passed to model __init__
+            num_classes (int): Number of classes for classifier linear layer, default=1000
+    """
     model = DPN(
         num_init_features=128, k_r=200, groups=50,
         k_sec=(4, 8, 20, 3), inc_sec=(20, 64, 64, 128),
-        num_classes=num_classes, test_time_pool=test_time_pool)
+        test_time_pool=test_time_pool, **kwargs)
     if pretrained:
-        if model_urls['dpn107-extra']:
-            model.load_state_dict(model_zoo.load_url(model_urls['dpn107-extra']))
-        elif has_mxnet and os.path.exists('./pretrained/'):
-            convert_from_mxnet(model, checkpoint_prefix='./pretrained/dpn107-extra')
-        else:
-            assert False, "Unable to load a pretrained model"
+        model.load_state_dict(load_state_dict_from_url(model_urls['dpn107-extra']))
     return model
 
 
@@ -186,14 +209,14 @@ class DualPathBlock(nn.Module):
         self.num_1x1_c = num_1x1_c
         self.inc = inc
         self.b = b
-        if block_type is 'proj':
+        if block_type == 'proj':
             self.key_stride = 1
             self.has_proj = True
-        elif block_type is 'down':
+        elif block_type == 'down':
             self.key_stride = 2
             self.has_proj = True
         else:
-            assert block_type is 'normal'
+            assert block_type == 'normal'
             self.key_stride = 1
             self.has_proj = False
 

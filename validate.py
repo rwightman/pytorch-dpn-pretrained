@@ -29,7 +29,7 @@ parser.add_argument('--img-size', default=224, type=int,
                     metavar='N', help='Input image dimension')
 parser.add_argument('--print-freq', '-p', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
-parser.add_argument('--restore-checkpoint', default='', type=str, metavar='PATH',
+parser.add_argument('--checkpoint', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                     help='use pre-trained model')
@@ -46,6 +46,9 @@ def main():
     if 'dpn' in args.model and args.img_size > 224 and not args.no_test_pool:
         test_time_pool = True
 
+    if not args.checkpoint and not args.pretrained:
+        args.pretrained = True  # might as well do something...
+
     # create model
     num_classes = 1000
     model = model_factory.create_model(
@@ -58,16 +61,16 @@ def main():
           (args.model, sum([m.numel() for m in model.parameters()])))
 
     # optionally resume from a checkpoint
-    if args.restore_checkpoint and os.path.isfile(args.restore_checkpoint):
-        print("=> loading checkpoint '{}'".format(args.restore_checkpoint))
-        checkpoint = torch.load(args.restore_checkpoint)
+    if args.checkpoint and os.path.isfile(args.checkpoint):
+        print("=> loading checkpoint '{}'".format(args.checkpoint))
+        checkpoint = torch.load(args.checkpoint)
         if isinstance(checkpoint, dict) and 'state_dict' in checkpoint:
             model.load_state_dict(checkpoint['state_dict'])
         else:
             model.load_state_dict(checkpoint)
-        print("=> loaded checkpoint '{}'".format(args.restore_checkpoint))
-    elif not args.pretrained:
-        print("=> no checkpoint found at '{}'".format(args.restore_checkpoint))
+        print("=> loaded checkpoint '{}'".format(args.checkpoint))
+    elif args.checkpoint:
+        print("=> no checkpoint found at '{}'".format(args.checkpoint))
         exit(1)
 
     if args.multi_gpu:
@@ -90,8 +93,7 @@ def main():
 
     loader = data.DataLoader(
         dataset,
-        batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True)
+        batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
     batch_time = AverageMeter()
     losses = AverageMeter()
